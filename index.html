@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Invitation - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .gallery-item {
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .image-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .overlay {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .login-container {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg">
+    <!-- Background Video/Image Container -->
+    <div id="backgroundContainer"></div>
+    <div id="overlay" class="fixed inset-0 z-0"></div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center px-4 relative z-10">
+        <div class="login-container rounded-3xl card-shadow p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome Back!</h1>
+                <p class="text-gray-600">Sign in to customize your invitation</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <input type="email" id="loginEmail" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                           placeholder="Enter your email">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="loginPassword" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                           placeholder="Enter your password">
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                        <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                    </label>
+                    <a href="#" class="text-sm text-purple-600 hover:text-purple-800">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-300">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-gray-600">Don't have an account? 
+                    <button onclick="showSignup()" class="text-purple-600 hover:text-purple-800 font-medium">Sign up</button>
+                </p>
+            </div>
+
+            <!-- Demo Login Button -->
+            <div class="mt-4 pt-4 border-t border-gray-200">
+                <button onclick="demoLogin()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition duration-300">
+                    🎭 Demo Login (Skip Authentication)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Screen -->
+    <div id="signupScreen" class="min-h-screen flex items-center justify-center px-4 relative z-10 hidden">
+        <div class="login-container rounded-3xl card-shadow p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
+                <p class="text-gray-600">Join us to create amazing invitations</p>
+            </div>
+
+            <form onsubmit="handleSignup(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <input type="text" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                           placeholder="Enter your full name">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <input type="email" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                           placeholder="Enter your email">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                           placeholder="Create a password">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                    <input type="password" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                           placeholder="Confirm your password">
+                </div>
+
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-300">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-gray-600">Already have an account? 
+                    <button onclick="showLogin()" class="text-purple-600 hover:text-purple-800 font-medium">Sign in</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (Hidden initially) -->
+    <div id="mainApp" class="hidden">
+        <div class="container mx-auto px-4 py-8 relative z-10">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div class="text-center flex-1">
+                    <h1 class="text-5xl font-bold text-white mb-4">You're Invited!</h1>
+                    <div class="w-24 h-1 bg-white mx-auto rounded"></div>
+                </div>
+                <button onclick="logout()" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition duration-300">
+                    Logout
+                </button>
+            </div>
+
+            <!-- Main Invitation Card -->
+            <div class="max-w-4xl mx-auto bg-white rounded-3xl card-shadow overflow-hidden mb-8">
+                <!-- Personalized Greeting -->
+                <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-8 text-center">
+                    <h2 class="text-3xl font-bold text-white mb-2">Dear <span id="inviteeName" class="underline">Sarah Johnson</span>,</h2>
+                    <p class="text-white text-lg opacity-90">We would love to have you join us for this special celebration!</p>
+                </div>
+
+                <!-- Event Details -->
+                <div class="p-8">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- Event Info -->
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-6">Event Details</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                        <span class="text-2xl">🎉</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">Annual Company Celebration</p>
+                                        <p class="text-gray-600">Join us for an evening of fun, food, and festivities</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                        <span class="text-2xl">📅</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800" id="eventDate">Saturday, December 15, 2024</p>
+                                        <p class="text-gray-600">7:00 PM - 11:00 PM</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                                        <span class="text-2xl">📍</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800" id="eventLocation">Grand Ballroom, Marriott Hotel</p>
+                                        <p class="text-gray-600">123 Main Street, Downtown City</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="mt-8 space-y-3">
+                                <button onclick="openMaps()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300">
+                                    📍 View on Maps
+                                </button>
+                                <button onclick="checkIn()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300">
+                                    ✅ Check-in at Event
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-6">What to Expect</h3>
+                            <div class="space-y-4">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">🍽️ Dinner & Drinks</h4>
+                                    <p class="text-gray-600">Enjoy a three-course meal with premium beverages</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">🎵 Live Entertainment</h4>
+                                    <p class="text-gray-600">Dancing and live music throughout the evening</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">🎁 Special Surprises</h4>
+                                    <p class="text-gray-600">Awards ceremony and door prizes</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                                <p class="text-sm text-gray-700">
+                                    <strong>Dress Code:</strong> Business casual to semi-formal<br>
+                                    <strong>RSVP:</strong> Please confirm by December 10th
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Customization Panel -->
+            <div class="max-w-4xl mx-auto bg-white rounded-3xl card-shadow p-8 mb-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Customize Your Invitation</h3>
+                
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Invited Person's Name</label>
+                        <input type="text" id="nameInput" value="Sarah Johnson" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                               onchange="updateName()">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Event Date</label>
+                        <input type="text" id="dateInput" value="Saturday, December 15, 2024"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                               onchange="updateDate()">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                        <input type="text" id="locationInput" value="Grand Ballroom, Marriott Hotel"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                               onchange="updateLocation()">
+                    </div>
+                </div>
+
+                <!-- Enhanced Background Customization -->
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-4">Background Options</label>
+                        
+                        <!-- Gradient Themes -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-medium text-gray-600 mb-3">Gradient Themes</h4>
+                            <div class="flex flex-wrap gap-3">
+                                <button onclick="changeBackground('gradient')" class="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:opacity-80 transition">
+                                    Purple Gradient
+                                </button>
+                                <button onclick="changeBackground('blue')" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-lg hover:opacity-80 transition">
+                                    Ocean Blue
+                                </button>
+                                <button onclick="changeBackground('sunset')" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:opacity-80 transition">
+                                    Sunset
+                                </button>
+                                <button onclick="changeBackground('forest')" class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:opacity-80 transition">
+                                    Forest
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-medium text-gray-600 mb-3">Custom Background Image</h4>
+                            <div class="flex items-center space-x-4">
+                                <input type="file" id="imageUpload" accept="image/*" onchange="uploadBackgroundImage()" 
+                                       class="hidden">
+                                <button onclick="document.getElementById('imageUpload').click()" 
+                                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-300">
+                                    📷 Upload Image
+                                </button>
+                                <span class="text-sm text-gray-500">JPG, PNG, GIF up to 10MB</span>
+                            </div>
+                        </div>
+
+                        <!-- Video Upload -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-medium text-gray-600 mb-3">Custom Background Video</h4>
+                            <div class="flex items-center space-x-4">
+                                <input type="file" id="videoUpload" accept="video/*" onchange="uploadBackgroundVideo()" 
+                                       class="hidden">
+                                <button onclick="document.getElementById('videoUpload').click()" 
+                                        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition duration-300">
+                                    🎥 Upload Video
+                                </button>
+                                <span class="text-sm text-gray-500">MP4, WebM up to 50MB</span>
+                            </div>
+                        </div>
+
+                        <!-- Preset Images -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-medium text-gray-600 mb-3">Preset Backgrounds</h4>
+                            <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+                                <button onclick="setPresetBackground('party')" class="aspect-square bg-gradient-to-br from-pink-400 to-purple-600 rounded-lg flex items-center justify-center text-white text-2xl hover:scale-105 transition">
+                                    🎉
+                                </button>
+                                <button onclick="setPresetBackground('elegant')" class="aspect-square bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg flex items-center justify-center text-white text-2xl hover:scale-105 transition">
+                                    ✨
+                                </button>
+                                <button onclick="setPresetBackground('nature')" class="aspect-square bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center text-white text-2xl hover:scale-105 transition">
+                                    🌿
+                                </button>
+                                <button onclick="setPresetBackground('celebration')" class="aspect-square bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-2xl hover:scale-105 transition">
+                                    🎊
+                                </button>
+                                <button onclick="setPresetBackground('formal')" class="aspect-square bg-gradient-to-br from-blue-900 to-purple-900 rounded-lg flex items-center justify-center text-white text-2xl hover:scale-105 transition">
+                                    🎩
+                                </button>
+                                <button onclick="setPresetBackground('romantic')" class="aspect-square bg-gradient-to-br from-rose-400 to-pink-600 rounded-lg flex items-center justify-center text-white text-2xl hover:scale-105 transition">
+                                    💕
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Background Controls -->
+                        <div class="flex items-center space-x-4">
+                            <button onclick="clearBackground()" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition duration-300">
+                                Clear Background
+                            </button>
+                            <div class="flex items-center space-x-2">
+                                <label class="text-sm text-gray-600">Overlay Opacity:</label>
+                                <input type="range" id="overlayOpacity" min="0" max="100" value="30" 
+                                       onchange="adjustOverlay()" class="w-24">
+                                <span id="opacityValue" class="text-sm text-gray-600">30%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Gallery -->
+            <div class="max-w-4xl mx-auto bg-white rounded-3xl card-shadow p-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Event Gallery</h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="gallery-item bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg h-32 flex items-center justify-center cursor-pointer" onclick="openGalleryItem(1)">
+                        <span class="text-white text-4xl">🎊</span>
+                    </div>
+                    <div class="gallery-item bg-gradient-to-br from-blue-400 to-teal-400 rounded-lg h-32 flex items-center justify-center cursor-pointer" onclick="openGalleryItem(2)">
+                        <span class="text-white text-4xl">🍽️</span>
+                    </div>
+                    <div class="gallery-item bg-gradient-to-br from-green-400 to-emerald-400 rounded-lg h-32 flex items-center justify-center cursor-pointer" onclick="openGalleryItem(3)">
+                        <span class="text-white text-4xl">🎵</span>
+                    </div>
+                    <div class="gallery-item bg-gradient-to-br from-orange-400 to-red-400 rounded-lg h-32 flex items-center justify-center cursor-pointer" onclick="openGalleryItem(4)">
+                        <span class="text-white text-4xl">🏆</span>
+                    </div>
+                </div>
+
+                <button onclick="addGalleryItem()" class="w-full border-2 border-dashed border-gray-300 rounded-lg py-8 text-gray-500 hover:border-purple-400 hover:text-purple-600 transition duration-300">
+                    <span class="text-2xl">+</span><br>
+                    Add Gallery Item
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-12">
+                <p class="text-white text-lg">We can't wait to celebrate with you! 🎉</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Modal -->
+    <div id="galleryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md mx-4">
+            <h4 class="text-xl font-bold mb-4" id="modalTitle">Gallery Item</h4>
+            <div class="text-center mb-6">
+                <div id="modalContent" class="text-6xl mb-4">🎊</div>
+                <p id="modalDescription" class="text-gray-600">Celebration decorations and party atmosphere</p>
+            </div>
+            <button onclick="closeModal()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Authentication Functions
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Demo authentication - in real app, this would validate against a server
+            if (email && password) {
+                showMainApp();
+            } else {
+                alert('Please enter both email and password');
+            }
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            // Demo signup - in real app, this would create account on server
+            alert('Account created successfully! You can now sign in.');
+            showLogin();
+        }
+
+        function demoLogin() {
+            showMainApp();
+        }
+
+        function showLogin() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('signupScreen').classList.add('hidden');
+        }
+
+        function showSignup() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('signupScreen').classList.remove('hidden');
+        }
+
+        function showMainApp() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('signupScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+        }
+
+        function logout() {
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            // Clear form fields
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        // Invitation Customization Functions
+        function updateName() {
+            const name = document.getElementById('nameInput').value;
+            document.getElementById('inviteeName').textContent = name;
+        }
+
+        function updateDate() {
+            const date = document.getElementById('dateInput').value;
+            document.getElementById('eventDate').textContent = date;
+        }
+
+        function updateLocation() {
+            const location = document.getElementById('locationInput').value;
+            document.getElementById('eventLocation').textContent = location;
+        }
+
+        // Enhanced Background Functions
+        function changeBackground(theme) {
+            clearBackground();
+            const body = document.body;
+            
+            switch(theme) {
+                case 'gradient':
+                    body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    break;
+                case 'blue':
+                    body.style.background = 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)';
+                    break;
+                case 'sunset':
+                    body.style.background = 'linear-gradient(135deg, #f97316 0%, #dc2626 100%)';
+                    break;
+                case 'forest':
+                    body.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                    break;
+            }
+        }
+
+        function uploadBackgroundImage() {
+            const input = document.getElementById('imageUpload');
+            const file = input.files[0];
+            
+            if (file) {
+                if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                    alert('Image file is too large. Please choose a file under 10MB.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    clearBackground();
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'image-bg';
+                    document.getElementById('backgroundContainer').appendChild(img);
+                    updateOverlay();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function uploadBackgroundVideo() {
+            const input = document.getElementById('videoUpload');
+            const file = input.files[0];
+            
+            if (file) {
+                if (file.size > 50 * 1024 * 1024) { // 50MB limit
+                    alert('Video file is too large. Please choose a file under 50MB.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    clearBackground();
+                    const video = document.createElement('video');
+                    video.src = e.target.result;
+                    video.className = 'video-bg';
+                    video.autoplay = true;
+                    video.loop = true;
+                    video.muted = true;
+                    document.getElementById('backgroundContainer').appendChild(video);
+                    updateOverlay();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function setPresetBackground(type) {
+            clearBackground();
+            const body = document.body;
+            
+            switch(type) {
+                case 'party':
+                    body.style.background = 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)';
+                    break;
+                case 'elegant':
+                    body.style.background = 'linear-gradient(135deg, #1f2937 0%, #111827 100%)';
+                    break;
+                case 'nature':
+                    body.style.background = 'linear-gradient(135deg, #10b981 0%, #3b82f6 100%)';
+                    break;
+                case 'celebration':
+                    body.style.background = 'linear-gradient(135deg, #fbbf24 0%, #f97316 100%)';
+                    break;
+                case 'formal':
+                    body.style.background = 'linear-gradient(135deg, #1e3a8a 0%, #581c87 100%)';
+                    break;
+                case 'romantic':
+                    body.style.background = 'linear-gradient(135deg, #fb7185 0%, #ec4899 100%)';
+                    break;
+            }
+        }
+
+        function clearBackground() {
+            document.getElementById('backgroundContainer').innerHTML = '';
+            document.body.style.background = '';
+            document.body.className = 'min-h-screen gradient-bg';
+        }
+
+        function adjustOverlay() {
+            const opacity = document.getElementById('overlayOpacity').value;
+            document.getElementById('opacityValue').textContent = opacity + '%';
+            updateOverlay();
+        }
+
+        function updateOverlay() {
+            const opacity = document.getElementById('overlayOpacity').value / 100;
+            const overlay = document.getElementById('overlay');
+            
+            if (document.getElementById('backgroundContainer').children.length > 0) {
+                overlay.style.background = `rgba(0, 0, 0, ${opacity})`;
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Map and Check-in Functions
+        function openMaps() {
+            const location = document.getElementById('eventLocation').textContent;
+            const address = "123 Main Street, Downtown City";
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + " " + address)}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        function checkIn() {
+            alert('🎉 Check-in successful!\n\nWelcome to the event! Please proceed to the registration desk for your welcome packet and table assignment.\n\nEnjoy the celebration!');
+        }
+
+        // Gallery Functions
+        function openGalleryItem(itemNumber) {
+            const modal = document.getElementById('galleryModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+            const description = document.getElementById('modalDescription');
+
+            const items = {
+                1: { title: 'Decorations', emoji: '🎊', desc: 'Beautiful party decorations and festive atmosphere' },
+                2: { title: 'Dining', emoji: '🍽️', desc: 'Exquisite three-course meal with premium beverages' },
+                3: { title: 'Entertainment', emoji: '🎵', desc: 'Live music and dancing throughout the evening' },
+                4: { title: 'Awards', emoji: '🏆', desc: 'Recognition ceremony and special achievements' }
+            };
+
+            const item = items[itemNumber];
+            title.textContent = item.title;
+            content.textContent = item.emoji;
+            description.textContent = item.desc;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('galleryModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function addGalleryItem() {
+            alert('Gallery customization feature!\n\nIn a full implementation, this would allow you to:\n• Upload custom images\n• Add event photos\n• Create photo albums\n• Share memories with guests');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('galleryModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Initialize overlay opacity display
+        document.getElementById('opacityValue').textContent = '30%';
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'964019b6029edd3c',t:'MTc1MzMyNTMyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
